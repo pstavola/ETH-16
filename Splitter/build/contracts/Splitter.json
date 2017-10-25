@@ -1,0 +1,263 @@
+{
+  "contract_name": "Splitter",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "receiver1",
+          "type": "address"
+        },
+        {
+          "name": "receiver2",
+          "type": "address"
+        }
+      ],
+      "name": "split",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "withdrawFunds",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "balances",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "resumeSplitter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "stopSplitter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": true,
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "receiver1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "splittedValue1",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "receiver2",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "splittedValue2",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "change",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogSplittedValue",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "requester",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "sendAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogWithdraw",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x60606040525b60008054600160a060020a03191633600160a060020a03161790556002805460ff191660011790555b5b61045a8061003e6000396000f300606060405236156100675763ffffffff60e060020a6000350416630f2c9329811461007057806312065fe01461009e57806324600fc3146100c357806327e235e3146100ea57806339f7733a1461011b5780636413d328146101425780638da5cb5b14610169575b61006e5b5b565b005b61008a600160a060020a0360043581169060243516610198565b604051901515815260200160405180910390f35b34156100a957600080fd5b6100b16102bd565b60405190815260200160405180910390f35b34156100ce57600080fd5b61008a6102da565b604051901515815260200160405180910390f35b34156100f557600080fd5b6100b1600160a060020a03600435166103ad565b60405190815260200160405180910390f35b341561012657600080fd5b61008a6103bf565b604051901515815260200160405180910390f35b341561014d57600080fd5b61008a6103f1565b604051901515815260200160405180910390f35b341561017457600080fd5b61017c61041f565b604051600160a060020a03909116815260200160405180910390f35b60025460009060ff1615156001146101af57600080fd5b3415156101bb57600080fd5b6002345b600160a060020a038516600090815260016020526040902080549290910490910190556002345b600160a060020a038416600090815260016020526040812080549390920490920190556002345b06111561023c576002345b33600160a060020a0316600090815260016020526040902080549290910690910190555b7f71529a13987215e8fa9f3c0f9f3784dd45d12f5ef90349055dea68c0971da11f836002345b04846002345b04336002345b06604051600160a060020a03968716815260208101959095529285166040808601919091526060850192909252909316608083015260a082015260c001905180910390a15060015b5b92915050565b600160a060020a0333166000908152600160205260409020545b90565b600254600090819060ff1615156001146102f357600080fd5b600160a060020a0333166000908152600160205260408120541161031657600080fd5b50600160a060020a033316600081815260016020526040808220805492905590919082156108fc0290839051600060405180830381858888f19350505050151561035f57600080fd5b7f4ce7033d118120e254016dccf195288400b28fc8936425acd5f17ce2df3ab7083382604051600160a060020a03909216825260208201526040908101905180910390a1600191505b5b5090565b60016020526000908152604090205481565b6000805433600160a060020a039081169116146103db57600080fd5b506002805460ff191660019081179091555b5b90565b6000805433600160a060020a0390811691161461040d57600080fd5b506002805460ff1916905560015b5b90565b600054600160a060020a0316815600a165627a7a7230582090bcfdde35c135d050b9c03dc9a8a49758a7336ffe0458868b9b307ed0bb5a510029",
+  "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0xd1d6003029f59d70b233f2b59aa30788d387518e",
+      "updated_at": 1508043588767
+    },
+    "1507785929423": {
+      "events": {},
+      "links": {},
+      "address": "0x5e97c39085c641aa11d2388c85defc8430d3d18d",
+      "updated_at": 1507958967665
+    },
+    "1508889087579": {
+      "events": {},
+      "links": {},
+      "address": "0xda6ace0f39b9b92aff2ef0bde46ef18ca10584fb",
+      "updated_at": 1508889117755
+    },
+    "1508890450883": {
+      "events": {},
+      "links": {},
+      "address": "0x1a388aca8b0295c3ed7989602cbe0f3f8a7eaf8d",
+      "updated_at": 1508890457842
+    },
+    "1508894258536": {
+      "events": {
+        "0x71529a13987215e8fa9f3c0f9f3784dd45d12f5ef90349055dea68c0971da11f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "receiver1",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "splittedValue1",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "receiver2",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "splittedValue2",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "change",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogSplittedValue",
+          "type": "event"
+        },
+        "0x4ce7033d118120e254016dccf195288400b28fc8936425acd5f17ce2df3ab708": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "requester",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "sendAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogWithdraw",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x9d5d2876927b9279a7e8e397af5b010197ff4629",
+      "updated_at": 1508895189198
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1508895189198
+}
