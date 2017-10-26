@@ -82,10 +82,10 @@ contract('Splitter', function(accounts) {
     })
     .then(function(withdrawFunds) {
       return contract.withdrawFunds({from:bob})
-      .then(function(_success) {
-        success = _success;
-        assert.isOk(success, "Withdraw went wrong");
-      })
+      .then(function(txn){
+        assert.equal(txn.logs[0].args.requester,bob,"Bob is not the recipient");
+        assert.equal(txn.logs[0].args.sendAmount.toString(10),oddAmountSplitted,"Value sent is not correct");
+    	})
       .then(function(getBalance1) {
         return contract.getBalance({from:bob})
         .then(function(_balance1)
@@ -95,15 +95,5 @@ contract('Splitter', function(accounts) {
         })
       })
     })
-	.then(function(txn){
-		for (var i = 0; i < txn.logs.length; i++) {
-			var log = txn.logs[i];
-			
-			if (log.event == "LogWithdraw") {
-				assert.equal(log.args[0],bob,"Bob is not the recipient");
-				assert.equal(log.args[1],oddAmount%2,"Value sent is not correct");
-			}
-		}
-	})
-  })
+  });
 });
