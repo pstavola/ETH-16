@@ -29,7 +29,7 @@ contract('Splitter', function(accounts) {
       assert.isOk(success, "Something went wrong");
     })
     .then(function(getBalance1) {
-      return contract.getBalance({from:bob})
+      return contract.balances(bob)
       .then(function(_balance1)
       {
         balance1 = _balance1.toString(10);
@@ -37,7 +37,7 @@ contract('Splitter', function(accounts) {
       })
     })
     .then(function(getBalance2) {
-      return contract.getBalance({from:carol})
+      return contract.balances(carol)
       .then(function(_balance2)
       {
         balance2 = _balance2;
@@ -52,7 +52,7 @@ contract('Splitter', function(accounts) {
       assert.isOk(success, "Something went wrong");
     })
     .then(function(getBalance1) {
-      return contract.getBalance({from:bob})
+      return contract.balances(bob)
       .then(function(_balance1)
       {
         balance1 = _balance1.toString(10);
@@ -60,7 +60,7 @@ contract('Splitter', function(accounts) {
       })
     })
     .then(function(getBalance2) {
-      return contract.getBalance({from:carol})
+      return contract.balances(carol)
       .then(function(_balance2)
       {
         balance2 = _balance2;
@@ -68,7 +68,7 @@ contract('Splitter', function(accounts) {
       })
     })
     .then(function(getBalanceSender) {
-      return contract.getBalance({from:alice});
+      return contract.balances(alice);
     }).then(function(_senderBalance){
       senderBalance = _senderBalance;
       assert.equal(senderBalance,oddAmount%2,"Alice's balance is not correct");
@@ -87,7 +87,7 @@ contract('Splitter', function(accounts) {
         assert.equal(txn.logs[0].args.sendAmount.toString(10),oddAmountSplitted,"Value sent is not correct");
     	})
       .then(function(getBalance1) {
-        return contract.getBalance({from:bob})
+        return contract.balances(bob)
         .then(function(_balance1)
         {
           balance1 = _balance1.toString(10);

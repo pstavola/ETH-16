@@ -45,13 +45,6 @@ contract Splitter{
       success = true;
     }
 
-    function getBalance()
-      constant
-      returns (uint)
-    {
-      return balances[msg.sender];
-    }
-
     function withdrawFunds()
       public
       isActive()
@@ -85,5 +78,5 @@ contract Splitter{
       return true;
     }
 
-    function () public payable {}
+    function () public {}
 }
