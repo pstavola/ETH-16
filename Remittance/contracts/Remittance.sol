@@ -102,5 +102,7 @@ contract Remittance{
         return true;
     }
 
-    function () public {}
+    function() {
+        revert();
+    }
 }
