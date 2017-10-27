@@ -85,12 +85,12 @@ contract Remittance{
     }
 
     function generateHash(bytes32 pwdOne, bytes32 pwdTwo)
-		public isActive()
-		constant
-		returns (bytes32 pwdHash)
-	{
-		pwdHash = keccak256(pwdOne, pwdTwo);
-	}
+        public isActive()
+        constant
+        returns (bytes32 pwdHash)
+    {
+        pwdHash = keccak256(pwdOne, pwdTwo);
+    }
 
     function stop() public isOwner() returns (bool) {
         active=false;
