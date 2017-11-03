@@ -7,10 +7,11 @@ contract Splitter{
 
     event LogSplittedValue(address receiver1, uint splittedValue1,address receiver2, uint splittedValue2, address sender, uint change);
     event LogWithdraw(address requester, uint sendAmount);
+    event LogSplitterStatus(bool activeStatus);
 
     modifier isActive()
     {
-      require(active==true);
+      require(active);
       _;
     }
 
@@ -21,7 +22,7 @@ contract Splitter{
     }
 
     function Splitter()
-      public payable
+      public
     {
       owner = msg.sender;
       active = true;
@@ -32,15 +33,18 @@ contract Splitter{
       isActive()
       returns (bool success)
     {
-      if(msg.value==0) revert();
+      require(msg.value>0);
 
-      balances[receiver1] += msg.value/2;
-      balances[receiver2] += msg.value/2;
+      uint splittedVal = msg.value/2;
+      uint splittedChange = msg.value%2;
 
-	  if (msg.value%2 > 0)
-		balances[msg.sender] += msg.value%2;
+      balances[receiver1] += splittedVal;
+      balances[receiver2] += splittedVal;
 
-      LogSplittedValue(receiver1, msg.value/2, receiver2, msg.value/2, msg.sender, msg.value%2);
+      if (splittedChange > 0)
+        balances[msg.sender] += splittedChange;
+
+      LogSplittedValue(receiver1, splittedVal, receiver2, splittedVal, msg.sender, splittedChange);
 
       success = true;
     }
@@ -66,6 +70,7 @@ contract Splitter{
       returns (bool)
     {
       active=false;
+      LogSplitterStatus(active);
       return true;
     }
 
@@ -75,6 +80,7 @@ contract Splitter{
       returns (bool)
     {
       active=true;
+      LogSplitterStatus(active);
       return true;
     }
 

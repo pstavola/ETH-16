@@ -25,8 +25,12 @@ contract('Splitter', function(accounts) {
   it("should split [even]", function() {
     return contract.split(bob, carol, ({from:alice, value:evenAmount}))
     .then(function(_success) {
-      success = _success;
-      assert.isOk(success, "Something went wrong");
+      assert.equal(_success.logs[0].args.receiver1, bob, "Something went wrong with bob");
+      assert.equal(_success.logs[0].args.receiver2, carol, "Something went wrong with carol");
+      assert.equal(_success.logs[0].args.sender, alice, "Something went wrong with alice");
+      assert.equal(_success.logs[0].args.splittedValue1, evenAmount/2, "Something went wrong with bob's splitted amount");
+      assert.equal(_success.logs[0].args.splittedValue2, evenAmount/2, "Something went wrong with carol's splitted amount");
+      assert.equal(_success.logs[0].args.change, evenAmount%2, "Something went wrong with alice's change");
     })
     .then(function(getBalance1) {
       return contract.balances(bob)
@@ -45,11 +49,16 @@ contract('Splitter', function(accounts) {
       })
     })
   });
+
   it("should split [odd]", function() {
     return contract.split(bob, carol, ({from:alice, value:oddAmount}))
     .then(function(_success) {
-      success = _success;
-      assert.isOk(success, "Something went wrong");
+      assert.equal(_success.logs[0].args.receiver1, bob, "Something went wrong with bob");
+      assert.equal(_success.logs[0].args.receiver2, carol, "Something went wrong with carol");
+      assert.equal(_success.logs[0].args.sender, alice, "Something went wrong with alice");
+      assert.equal(_success.logs[0].args.splittedValue1, oddAmountSplitted, "Something went wrong with bob's splitted amount");
+      assert.equal(_success.logs[0].args.splittedValue2, oddAmountSplitted, "Something went wrong with carol's splitted amount");
+      assert.equal(_success.logs[0].args.change, oddAmountChange, "Something went wrong with alice's change");
     })
     .then(function(getBalance1) {
       return contract.balances(bob)
@@ -71,9 +80,10 @@ contract('Splitter', function(accounts) {
       return contract.balances(alice);
     }).then(function(_senderBalance){
       senderBalance = _senderBalance;
-      assert.equal(senderBalance,oddAmount%2,"Alice's balance is not correct");
+      assert.equal(senderBalance,oddAmountChange,"Alice's balance is not correct");
     });
   });
+
   it("should withdraw requester's funds", function() {
     return contract.split(bob, carol, ({from:alice, value:oddAmount}))
     .then(function(_success) {
