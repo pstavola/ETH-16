@@ -1,13 +1,13 @@
 pragma solidity ^0.4.10;
 
-contract Splitter{
+contract Splitter {
     address public owner;
     mapping(address=>uint) public balances;
     bool active;
 
-    event LogSplittedValue(address receiver1, uint splittedValue1,address receiver2, uint splittedValue2, address sender, uint change);
+    event LogSplittedValue(address indexed receiver1, uint splittedValue1,address indexed receiver2, uint splittedValue2, address sender, uint change);
     event LogWithdraw(address requester, uint sendAmount);
-    event LogSplitterStatus(bool activeStatus);
+    event LogSplitterStatus(address who, bool activeStatus);
 
     modifier isActive()
     {
@@ -57,7 +57,7 @@ contract Splitter{
       require(balances[msg.sender]>0);
 
       uint sendAmount = balances[msg.sender];
-      balances[msg.sender]=0;
+      balances[msg.sender] = 0;
       msg.sender.transfer(sendAmount);
 
       LogWithdraw(msg.sender, sendAmount);
@@ -69,8 +69,9 @@ contract Splitter{
       isOwner()
       returns (bool)
     {
-      active=false;
-      LogSplitterStatus(active);
+      require(active);
+      active = false;
+      LogSplitterStatus(msg.sender, active);
       return true;
     }
 
@@ -79,10 +80,11 @@ contract Splitter{
       isOwner()
       returns (bool)
     {
-      active=true;
-      LogSplitterStatus(active);
+      require(!active);
+      active = true;
+      LogSplitterStatus(msg.sender, active);
       return true;
     }
 
-    function () public {}
+    function () public { revert(); }
 }
