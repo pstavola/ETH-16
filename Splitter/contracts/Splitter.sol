@@ -84,7 +84,5 @@ contract Splitter{
       return true;
     }
 
-    function() {
-    	revert();
-    }
+    function () public {}
 }
