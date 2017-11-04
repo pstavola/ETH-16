@@ -5,7 +5,7 @@ contract Splitter {
     mapping(address=>uint) public balances;
     bool active;
 
-    event LogSplittedValue(address indexed receiver1, uint splittedValue1,address indexed receiver2, uint splittedValue2, address sender, uint change);
+    event LogSplittedValue(address indexed receiver1, uint splittedValue1,address indexed receiver2, uint splittedValue2, address indexed sender, uint change);
     event LogWithdraw(address requester, uint sendAmount);
     event LogSplitterStatus(address who, bool activeStatus);
 
@@ -84,6 +84,14 @@ contract Splitter {
       active = true;
       LogSplitterStatus(msg.sender, active);
       return true;
+    }
+
+    function getContactStatus()
+      public
+      constant
+      returns (bool)
+    {
+      return active;
     }
 
     function () public { revert(); }
