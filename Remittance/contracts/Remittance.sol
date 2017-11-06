@@ -1,16 +1,17 @@
 pragma solidity ^0.4.10;
 
-contract Remittance{
-    address owner;
-    bool active;
-    uint public fee;
+import "./Pausable.sol";
 
-    event LogFee(uint fee);
+contract Remittance is Pausable {
+    uint public fee;
+    uint commissionsAmount;
+
+    event LogFeeSet(address who, uint gasPrice, uint gasUsed, uint fee);
     event LogSendFunds(address sender, address receiver, uint amout,bytes32 passwordHash,uint duration);
     event LogReleaseFunds(address exchange, uint sentAmount, uint fee);
     event LogClaimBack(address claimer, uint sentAmount, uint blockNumber);
 
-    struct Ledger{
+    struct Ledger {
       address sender;
       address receiver;
       uint amount;
@@ -19,21 +20,9 @@ contract Remittance{
 
     mapping (bytes32=>Ledger) public exchangeLedger;
 
-    modifier isActive(){
-        require(active==true);
-        _;
-    }
-
-    modifier isOwner(){
-        require(msg.sender == owner);
-        _;
-    }
-
-    function Remittance() public{
-      owner = msg.sender;
-      active = true;
+    function Remittance() public {
       fee = (tx.gasprice*msg.gas)/3;
-      LogFee(fee);
+      LogFeeSet(msg.sender, tx.gasprice, msg.gas, fee);
     }
 
     function sendFunds(address exchange, bytes32 passwordsHash, uint duration)
@@ -43,11 +32,15 @@ contract Remittance{
         require(duration<500);
         require(msg.value>0);
 
-        exchangeLedger[passwordsHash].sender = msg.sender;
-        exchangeLedger[passwordsHash].receiver = exchange;
-        exchangeLedger[passwordsHash].amount = msg.value;
-        exchangeLedger[passwordsHash].deadline = block.number + duration;
-        LogSendFunds(msg.sender, exchange, msg.value, passwordsHash, exchangeLedger[passwordsHash].deadline);
+        bytes32 hashedKey = keccak256(exchange, passwordsHash);
+
+        require(exchangeLedger[hashedKey].deadline==0);
+
+        exchangeLedger[hashedKey].sender = msg.sender;
+        exchangeLedger[hashedKey].receiver = exchange;
+        exchangeLedger[hashedKey].amount = msg.value;
+        exchangeLedger[hashedKey].deadline = block.number + duration;
+        LogSendFunds(msg.sender, exchange, msg.value, passwordsHash, exchangeLedger[hashedKey].deadline);
         success = true;
     }
 
@@ -55,51 +48,67 @@ contract Remittance{
         public isActive()
         returns (bool success)
     {
-        bytes32 _passwordsHash = generateHash(passwordExchOwner, passwordReceiver);
-        require(exchangeLedger[_passwordsHash].receiver==msg.sender);
-        require(exchangeLedger[_passwordsHash].amount>0);
+        bytes32 _passwordsHash = keccak256(passwordExchOwner, passwordReceiver);
+        bytes32 hashedKey = keccak256(msg.sender, _passwordsHash);
+        require(exchangeLedger[hashedKey].amount>0);
 
-        uint amountToSend = exchangeLedger[_passwordsHash].amount;
-        if(amountToSend>fee)
+        uint amountToSend = exchangeLedger[hashedKey].amount;
+
+        if (amountToSend>fee) {
           amountToSend -= fee;
+          commissionsAmount += fee;
+        }
 
-        exchangeLedger[_passwordsHash].amount = 0;
+        exchangeLedger[hashedKey].amount = 0;
         msg.sender.transfer(amountToSend);
-        owner.transfer(fee);
         LogReleaseFunds(msg.sender, amountToSend, fee);
         success = true;
     }
 
-    function claimBack(bytes32 _passwordsHash)
+    function claimBack(address exchange, bytes32 _passwordsHash)
         public isActive()
         returns (bool success)
     {
-        require(msg.sender==exchangeLedger[_passwordsHash].sender);
-        require(block.number>exchangeLedger[_passwordsHash].deadline);
+        bytes32 hashedKey = keccak256(exchange, _passwordsHash);
 
-        uint amountToSend = exchangeLedger[_passwordsHash].amount;
-        exchangeLedger[_passwordsHash].amount=0;
+        require(msg.sender==exchangeLedger[hashedKey].sender);
+        require(block.number>exchangeLedger[hashedKey].deadline);
+
+        uint amountToSend = exchangeLedger[hashedKey].amount;
+        exchangeLedger[hashedKey].amount = 0;
         msg.sender.transfer(amountToSend);
         LogClaimBack(msg.sender, amountToSend, block.number);
         success = true;
     }
 
-    function generateHash(bytes32 pwdOne, bytes32 pwdTwo)
+    function generateHashPwd(bytes32 _v1, bytes32 _v2)
         public isActive()
         constant
         returns (bytes32 pwdHash)
     {
-        pwdHash = keccak256(pwdOne, pwdTwo);
+        pwdHash = keccak256(_v1, _v2);
     }
 
-    function stop() public isOwner() returns (bool) {
-        active=false;
-        return true;
+    function generateHashKey(address _v1, bytes32 _v2)
+        public isActive()
+        constant
+        returns (bytes32 keyHash)
+    {
+        keyHash = keccak256(_v1, _v2);
     }
 
-    function resume() public isOwner() returns (bool) {
-        active=true;
-        return true;
+    function withdrawCommissions()
+        public isOwner()
+        returns (bool success)
+    {
+        uint256 toSend = commissionsAmount;
+
+        require(commissionsAmount > 0);
+        require(this.balance >= commissionsAmount);
+
+        commissionsAmount = 0;
+        owner.transfer(toSend);
+        success = true;
     }
 
     function() {
