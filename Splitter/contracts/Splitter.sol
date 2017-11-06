@@ -22,7 +22,7 @@ contract Splitter {
     }
 
     function Splitter()
-      public
+      public 
     {
       owner = msg.sender;
       active = true;
@@ -86,7 +86,7 @@ contract Splitter {
       return true;
     }
 
-    function getContactStatus()
+    function getStatus()
       public
       constant
       returns (bool)
