@@ -81,6 +81,7 @@ contract Remittance is Pausable {
         success = true;
     }
 
+    //needed only for testing
     function generateHashPwd(bytes32 _v1, bytes32 _v2)
         public isActive()
         constant
@@ -89,6 +90,7 @@ contract Remittance is Pausable {
         pwdHash = keccak256(_v1, _v2);
     }
 
+    //needed only for testing
     function generateHashKey(address _v1, bytes32 _v2)
         public isActive()
         constant
