@@ -5,10 +5,10 @@ import "./Owned.sol";
 contract Pausable is Owned {
     bool active;
 
-    event LogStatusChange(address who, bool activeStatus);
+    event LogPauseStatusChange(address who, bool activeStatus);
 
     modifier isActive(){
-        require(active==true);
+        require(active);
         _;
     }
 
@@ -17,15 +17,23 @@ contract Pausable is Owned {
     }
 
 
-    function stop() public isOwner() returns (bool) {
+    function stop() 
+        public isOwner() 
+        returns (bool success) 
+    {
+        require(active);
         active = false;
-        LogStatusChange(msg.sender, active);
+        LogPauseStatusChange(msg.sender, active);
         return true;
     }
 
-    function resume() public isOwner() returns (bool) {
+    function resume() 
+        public isOwner() 
+        returns (bool success) 
+    {
+        require(!active);
         active = true;
-        LogStatusChange(msg.sender, active);
+        LogPauseStatusChange(msg.sender, active);
         return true;
     }
 

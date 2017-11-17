@@ -7,13 +7,12 @@ contract Remittance is Pausable {
     uint commissionsAmount;
 
     event LogFeeSet(address who, uint gasPrice, uint gasUsed, uint fee);
-    event LogSendFunds(address sender, address receiver, uint amout,bytes32 passwordHash,uint duration);
+    event LogSendFunds(address sender, uint amout,bytes32 hashKey,uint duration);
     event LogReleaseFunds(address exchange, uint sentAmount, uint fee);
     event LogClaimBack(address claimer, uint sentAmount, uint blockNumber);
 
     struct Ledger {
       address sender;
-      address receiver;
       uint amount;
       uint deadline;
     }
@@ -25,22 +24,21 @@ contract Remittance is Pausable {
       LogFeeSet(msg.sender, tx.gasprice, msg.gas, fee);
     }
 
-    function sendFunds(address exchange, bytes32 passwordsHash, uint duration)
+    function sendFunds(bytes32 hashedKey, uint duration)
         public payable isActive()
         returns (bool success)
     {
         require(duration<500);
-        require(msg.value>0);
+        require(msg.value>fee);
 
-        bytes32 hashedKey = keccak256(exchange, passwordsHash);
+        uint _deadline = exchangeLedger[hashedKey].deadline;
 
-        require(exchangeLedger[hashedKey].deadline==0);
+        require(_deadline==0);
 
         exchangeLedger[hashedKey].sender = msg.sender;
-        exchangeLedger[hashedKey].receiver = exchange;
         exchangeLedger[hashedKey].amount = msg.value;
         exchangeLedger[hashedKey].deadline = block.number + duration;
-        LogSendFunds(msg.sender, exchange, msg.value, passwordsHash, exchangeLedger[hashedKey].deadline);
+        LogSendFunds(msg.sender, msg.value, hashedKey, _deadline);
         success = true;
     }
 
@@ -48,16 +46,12 @@ contract Remittance is Pausable {
         public isActive()
         returns (bool success)
     {
-        bytes32 _passwordsHash = keccak256(passwordExchOwner, passwordReceiver);
-        bytes32 hashedKey = keccak256(msg.sender, _passwordsHash);
+        bytes32 hashedKey = generateHash(msg.sender, passwordExchOwner, passwordReceiver);
         require(exchangeLedger[hashedKey].amount>0);
+        require(exchangeLedger[hashedKey].deadline>block.number);
 
-        uint amountToSend = exchangeLedger[hashedKey].amount;
-
-        if (amountToSend>fee) {
-          amountToSend -= fee;
-          commissionsAmount += fee;
-        }
+        uint amountToSend = exchangeLedger[hashedKey].amount-fee;
+        commissionsAmount += fee;
 
         exchangeLedger[hashedKey].amount = 0;
         msg.sender.transfer(amountToSend);
@@ -65,12 +59,10 @@ contract Remittance is Pausable {
         success = true;
     }
 
-    function claimBack(address exchange, bytes32 _passwordsHash)
+    function claimBack(bytes32 hashedKey)
         public isActive()
         returns (bool success)
     {
-        bytes32 hashedKey = keccak256(exchange, _passwordsHash);
-
         require(msg.sender==exchangeLedger[hashedKey].sender);
         require(block.number>exchangeLedger[hashedKey].deadline);
 
@@ -81,35 +73,25 @@ contract Remittance is Pausable {
         success = true;
     }
 
-    //needed only for testing
-    function generateHashPwd(bytes32 _v1, bytes32 _v2)
+    function generateHash(address _v1, bytes32 _v2, bytes32 _v3)
         public isActive()
         constant
         returns (bytes32 pwdHash)
     {
-        pwdHash = keccak256(_v1, _v2);
-    }
-
-    //needed only for testing
-    function generateHashKey(address _v1, bytes32 _v2)
-        public isActive()
-        constant
-        returns (bytes32 keyHash)
-    {
-        keyHash = keccak256(_v1, _v2);
+        pwdHash = keccak256(_v1, _v2, _v3);
     }
 
     function withdrawCommissions()
         public isOwner()
         returns (bool success)
     {
-        uint256 toSend = commissionsAmount;
+        uint toSend = commissionsAmount;
 
-        require(commissionsAmount > 0);
-        require(this.balance >= commissionsAmount);
+        require(toSend > 0);
+        assert(this.balance >= toSend);
 
         commissionsAmount = 0;
-        owner.transfer(toSend);
+        msg.sender.transfer(toSend);
         success = true;
     }
 
