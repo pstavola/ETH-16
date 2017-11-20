@@ -1,13 +1,16 @@
 pragma solidity ^0.4.10;
 
 import "./Pausable.sol";
+import "./SafeMath.sol";
 
 contract Remittance is Pausable {
-    uint public fee;
-    uint commissionsAmount;
+    using SafeMath for uint;
 
-    event LogFeeSet(address who, uint gasPrice, uint gasUsed, uint fee);
-    event LogSendFunds(address sender, uint amout,bytes32 hashKey,uint duration);
+    uint public fee;
+    uint public commissionsAmount;
+
+    event LogFeeSet(address who, uint fee);
+    event LogSendFunds(address sender, uint amout, bytes32 hashKey, uint duration);
     event LogReleaseFunds(address exchange, uint sentAmount, uint fee);
     event LogClaimBack(address claimer, uint sentAmount, uint blockNumber);
 
@@ -19,9 +22,13 @@ contract Remittance is Pausable {
 
     mapping (bytes32=>Ledger) public exchangeLedger;
 
-    function Remittance() public {
-      fee = (tx.gasprice*msg.gas)/3;
-      LogFeeSet(msg.sender, tx.gasprice, msg.gas, fee);
+    function setFee(uint _fee)
+        public isOwner()
+        returns (bool success)
+    {
+        fee = _fee;
+        LogFeeSet(msg.sender, fee);
+        success = true;
     }
 
     function sendFunds(bytes32 hashedKey, uint duration)
@@ -48,10 +55,10 @@ contract Remittance is Pausable {
     {
         bytes32 hashedKey = generateHash(msg.sender, passwordExchOwner, passwordReceiver);
         require(exchangeLedger[hashedKey].amount>0);
-        require(exchangeLedger[hashedKey].deadline>block.number);
+        require(block.number<=exchangeLedger[hashedKey].deadline);
 
         uint amountToSend = exchangeLedger[hashedKey].amount-fee;
-        commissionsAmount += fee;
+        SafeMath.add(commissionsAmount, fee);
 
         exchangeLedger[hashedKey].amount = 0;
         msg.sender.transfer(amountToSend);
@@ -74,7 +81,7 @@ contract Remittance is Pausable {
     }
 
     function generateHash(address _v1, bytes32 _v2, bytes32 _v3)
-        public isActive()
+        public
         constant
         returns (bytes32 pwdHash)
     {

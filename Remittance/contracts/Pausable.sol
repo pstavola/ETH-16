@@ -7,17 +7,12 @@ contract Pausable is Owned {
 
     event LogPauseStatusChange(address who, bool activeStatus);
 
-    modifier isActive(){
+    modifier isActive{
         require(active);
         _;
     }
 
-    function Pausable() public {
-        active = true;
-    }
-
-
-    function stop() 
+    function inactivate() 
         public isOwner() 
         returns (bool success) 
     {
@@ -27,7 +22,7 @@ contract Pausable is Owned {
         return true;
     }
 
-    function resume() 
+    function activate() 
         public isOwner() 
         returns (bool success) 
     {
