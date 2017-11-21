@@ -26,8 +26,8 @@ contract Owned {
         public isOwner()
         returns (bool success)
     {
-		require(newOwner != address(0));
-		require(owner != newOwner);
+        require(newOwner != address(0));
+        require(owner != newOwner);
 		
         LogChangeOwner(owner, newOwner);
 		

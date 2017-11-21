@@ -37,7 +37,7 @@ contract Pausable is Owned {
         constant
         returns (bool _active)
     {
-		_active = active;
+        _active = active;
     }
 
     function () {

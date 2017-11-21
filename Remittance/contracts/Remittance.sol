@@ -8,13 +8,13 @@ contract Remittance is Pausable {
 
     uint private fee;
     uint private commissionsAmount;
-	uint constant DURATION_LIMIT = 500;
+    uint constant DURATION_LIMIT = 500;
 
     event LogFeeSet(address indexed who, uint fee);
     event LogSendFunds(address indexed sender, uint amount, bytes32 hashKey, uint duration);
     event LogReleaseFunds(address indexed exchange, uint sentAmount, uint fee);
     event LogClaimBack(address indexed claimer, uint sentAmount);
-	event LogCommissionsWithdrawal(uint amountWithdrawn);
+    event LogCommissionsWithdrawal(uint amountWithdrawn);
 
     struct Ledger {
       address sender;
@@ -28,7 +28,7 @@ contract Remittance is Pausable {
         public isOwner()
         returns (bool success)
     {
-		require(fee != _fee);
+        require(fee != _fee);
         fee = _fee;
         LogFeeSet(msg.sender, fee);
         success = true;
@@ -39,7 +39,7 @@ contract Remittance is Pausable {
         constant
         returns (uint _fee)
     {
-		_fee = fee;
+        _fee = fee;
     }
 
     function getCommissions()
@@ -47,7 +47,7 @@ contract Remittance is Pausable {
         constant
         returns (uint _commissions)
     {
-		_commissions = commissionsAmount;
+        _commissions = commissionsAmount;
     }
 
     function getDurationLimit()
@@ -55,7 +55,7 @@ contract Remittance is Pausable {
         constant
         returns (uint _limit)
     {
-		_limit = DURATION_LIMIT;
+        _limit = DURATION_LIMIT;
     }
 
     function sendFunds(bytes32 hashedKey, uint duration)
@@ -65,14 +65,14 @@ contract Remittance is Pausable {
         require(duration<DURATION_LIMIT);
         require(msg.value>fee);
         require(exchangeLedger[hashedKey].deadline==0);
-		
-		uint _deadline = SafeMath.add(block.number, duration);
+        
+        uint _deadline = SafeMath.add(block.number, duration);
 
         exchangeLedger[hashedKey] = Ledger({
 			sender : msg.sender,
 			amount : msg.value,
 			deadline : _deadline
-		});
+        });
 		
         LogSendFunds(msg.sender, msg.value, hashedKey, _deadline);
         success = true;
@@ -128,8 +128,8 @@ contract Remittance is Pausable {
 
         commissionsAmount = 0;
         msg.sender.transfer(toSend);
-		
-		LogCommissionsWithdrawal(toSend);
+        
+        LogCommissionsWithdrawal(toSend);
         success = true;
     }
 
