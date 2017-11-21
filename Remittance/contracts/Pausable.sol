@@ -3,9 +3,9 @@ pragma solidity ^0.4.10;
 import "./Owned.sol";
 
 contract Pausable is Owned {
-    bool active;
+    bool private active;
 
-    event LogPauseStatusChange(address who, bool activeStatus);
+    event LogPauseStatusChange(address indexed who, bool activeStatus);
 
     modifier isActive{
         require(active);
@@ -30,6 +30,14 @@ contract Pausable is Owned {
         active = true;
         LogPauseStatusChange(msg.sender, active);
         return true;
+    }
+
+    function getStatus()
+        public
+        constant
+        returns (bool _active)
+    {
+		_active = active;
     }
 
     function () {
