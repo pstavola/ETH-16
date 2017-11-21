@@ -1,21 +1,16 @@
 pragma solidity ^0.4.10;
 
-import "./ShopAdministration.sol";
+import "./Owned.sol";
 
-contract Pausable is ShopAdministration {
+contract Pausable is Owned {
     bool private active;
 
-    event LogPauseStatusChange(address who, bool activeStatus);
+    event LogPauseStatusChange(address indexed who, bool activeStatus);
 
-    modifier isActive(){
+    modifier isActive{
         require(active);
         _;
     }
-
-    function Pausable() public {
-        active = true;
-    }
-
 
     function inactivate() 
         public isOwner() 
@@ -35,6 +30,14 @@ contract Pausable is ShopAdministration {
         active = true;
         LogPauseStatusChange(msg.sender, active);
         return true;
+    }
+
+    function getStatus()
+        public
+        constant
+        returns (bool _active)
+    {
+        _active = active;
     }
 
     function () {
