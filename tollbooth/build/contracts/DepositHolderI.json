@@ -1,0 +1,345 @@
+{
+  "contractName": "DepositHolderI",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getDeposit",
+      "outputs": [
+        {
+          "name": "weis",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "depositWeis",
+          "type": "uint256"
+        }
+      ],
+      "name": "setDeposit",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "depositWeis",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogDepositSet",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.13;\n\ncontract DepositHolderI {\n\n    /**\n     * Event emitted when the deposit value has been set.\n     * @param sender The account that ran the action.\n     * @param depositWeis The value of the deposit measured in weis.\n     */\n    event LogDepositSet(address indexed sender, uint depositWeis);\n\n    /**\n     * Called by the owner of the DepositHolder.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should roll back if the argument passed is 0.\n     *     It should roll back if the argument is no different from the current deposit.\n     * @param depositWeis The value of the deposit being set, measure in weis.\n     * @return Whether the action was successful.\n     * Emits LogDepositSet.\n     */\n    function setDeposit(uint depositWeis)\n        public\n        returns(bool success);\n\n    /**\n     * @return The base price, then to be multiplied by the multiplier, a given vehicle\n     * needs to deposit to enter the road system.\n     */\n    function getDeposit()\n        constant\n        public\n        returns(uint weis);\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `DepositHolder` that:\n     *     - is `OwnedI`, and `DepositHolderI`.\n     *     - has a constructor that takes:\n     *         - one `uint` parameter, the initial deposit wei value, which cannot be 0.\n     */        \n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/DepositHolderI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/DepositHolderI.sol",
+      "exportedSymbols": {
+        "DepositHolderI": [
+          1684
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 1665,
+        "name": "PragmaDirective",
+        "src": "0:24:10"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            1684
+          ],
+          "name": "DepositHolderI",
+          "scope": 1685
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogDepositSet"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1671,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1666,
+                        "name": "ElementaryTypeName",
+                        "src": "274:7:10"
+                      }
+                    ],
+                    "id": 1667,
+                    "name": "VariableDeclaration",
+                    "src": "274:22:10"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "depositWeis",
+                      "scope": 1671,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1668,
+                        "name": "ElementaryTypeName",
+                        "src": "298:4:10"
+                      }
+                    ],
+                    "id": 1669,
+                    "name": "VariableDeclaration",
+                    "src": "298:16:10"
+                  }
+                ],
+                "id": 1670,
+                "name": "ParameterList",
+                "src": "273:42:10"
+              }
+            ],
+            "id": 1671,
+            "name": "EventDefinition",
+            "src": "254:62:10"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setDeposit",
+              "payable": false,
+              "scope": 1684,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "depositWeis",
+                      "scope": 1678,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1672,
+                        "name": "ElementaryTypeName",
+                        "src": "792:4:10"
+                      }
+                    ],
+                    "id": 1673,
+                    "name": "VariableDeclaration",
+                    "src": "792:16:10"
+                  }
+                ],
+                "id": 1674,
+                "name": "ParameterList",
+                "src": "791:18:10"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1678,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1675,
+                        "name": "ElementaryTypeName",
+                        "src": "841:4:10"
+                      }
+                    ],
+                    "id": 1676,
+                    "name": "VariableDeclaration",
+                    "src": "841:12:10"
+                  }
+                ],
+                "id": 1677,
+                "name": "ParameterList",
+                "src": "840:14:10"
+              }
+            ],
+            "id": 1678,
+            "name": "FunctionDefinition",
+            "src": "772:83:10"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "getDeposit",
+              "payable": false,
+              "scope": 1684,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1679,
+                "name": "ParameterList",
+                "src": "1034:2:10"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "weis",
+                      "scope": 1683,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1680,
+                        "name": "ElementaryTypeName",
+                        "src": "1085:4:10"
+                      }
+                    ],
+                    "id": 1681,
+                    "name": "VariableDeclaration",
+                    "src": "1085:9:10"
+                  }
+                ],
+                "id": 1682,
+                "name": "ParameterList",
+                "src": "1084:11:10"
+              }
+            ],
+            "id": 1683,
+            "name": "FunctionDefinition",
+            "src": "1015:81:10"
+          }
+        ],
+        "id": 1684,
+        "name": "ContractDefinition",
+        "src": "26:1358:10"
+      }
+    ],
+    "id": 1685,
+    "name": "SourceUnit",
+    "src": "0:1384:10"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.303Z"
+}

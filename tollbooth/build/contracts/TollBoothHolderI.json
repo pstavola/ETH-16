@@ -1,0 +1,568 @@
+{
+  "contractName": "TollBoothHolderI",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "tollBooth",
+          "type": "address"
+        }
+      ],
+      "name": "removeTollBooth",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "tollBooth",
+          "type": "address"
+        }
+      ],
+      "name": "addTollBooth",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "tollBooth",
+          "type": "address"
+        }
+      ],
+      "name": "isTollBooth",
+      "outputs": [
+        {
+          "name": "isIndeed",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "tollBooth",
+          "type": "address"
+        }
+      ],
+      "name": "LogTollBoothAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "tollBooth",
+          "type": "address"
+        }
+      ],
+      "name": "LogTollBoothRemoved",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.13;\n\ncontract TollBoothHolderI {\n\n    /**\n     * Event emitted when a toll booth has been added to the TollBoothOperator.\n     * @param sender The account that ran the action.\n     * @param tollBooth The toll booth just added.\n     */\n    event LogTollBoothAdded(\n        address indexed sender,\n        address indexed tollBooth);\n\n    /**\n     * Called by the owner of the TollBoothOperator.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should roll back if the argument is already a toll booth.\n     *     It should roll back if the argument is a 0x address.\n     *     When part of TollBoothOperatorI, it should be possible to add toll booths even when\n     *       the contract is paused.\n     * @param tollBooth The address of the toll booth being added.\n     * @return Whether the action was successful.\n     * Emits LogTollBoothAdded\n     */\n    function addTollBooth(address tollBooth)\n        public\n        returns(bool success);\n\n    /**\n     * @param tollBooth The address of the toll booth we enquire about.\n     * @return Whether the toll booth is indeed part of the operator.\n     */\n    function isTollBooth(address tollBooth)\n        constant\n        public\n        returns(bool isIndeed);\n\n    /**\n     * Event emitted when a toll booth has been removed from the TollBoothOperator.\n     * @param sender The account that ran the action.\n     * @param tollBooth The toll booth just removed.\n     */\n    event LogTollBoothRemoved(\n        address indexed sender,\n        address indexed tollBooth);\n\n    /**\n     * Called by the owner of the TollBoothOperator.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should roll back if the argument has already been removed.\n     *     It should roll back if the argument is a 0x address.\n     *     When part of TollBoothOperatorI, it should be possible to remove toll booth even when\n     *       the contract is paused.\n     * @param tollBooth The toll booth to remove.\n     * @return Whether the action was successful.\n     * Emits LogTollBoothRemoved\n     */\n    function removeTollBooth(address tollBooth)\n        public\n        returns(bool success);\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `TollBoothHolder` that:\n     *     - is `OwnedI`, `TollBoothHolderI`.\n     *     - has a constructor that takes no parameter.\n     */        \n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/TollBoothHolderI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/TollBoothHolderI.sol",
+      "exportedSymbols": {
+        "TollBoothHolderI": [
+          1911
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 1877,
+        "name": "PragmaDirective",
+        "src": "0:24:17"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            1911
+          ],
+          "name": "TollBoothHolderI",
+          "scope": 1912
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogTollBoothAdded"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1883,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1878,
+                        "name": "ElementaryTypeName",
+                        "src": "293:7:17"
+                      }
+                    ],
+                    "id": 1879,
+                    "name": "VariableDeclaration",
+                    "src": "293:22:17"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "tollBooth",
+                      "scope": 1883,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1880,
+                        "name": "ElementaryTypeName",
+                        "src": "325:7:17"
+                      }
+                    ],
+                    "id": 1881,
+                    "name": "VariableDeclaration",
+                    "src": "325:25:17"
+                  }
+                ],
+                "id": 1882,
+                "name": "ParameterList",
+                "src": "283:68:17"
+              }
+            ],
+            "id": 1883,
+            "name": "EventDefinition",
+            "src": "260:92:17"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "addTollBooth",
+              "payable": false,
+              "scope": 1911,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tollBooth",
+                      "scope": 1890,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1884,
+                        "name": "ElementaryTypeName",
+                        "src": "944:7:17"
+                      }
+                    ],
+                    "id": 1885,
+                    "name": "VariableDeclaration",
+                    "src": "944:17:17"
+                  }
+                ],
+                "id": 1886,
+                "name": "ParameterList",
+                "src": "943:19:17"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1890,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1887,
+                        "name": "ElementaryTypeName",
+                        "src": "994:4:17"
+                      }
+                    ],
+                    "id": 1888,
+                    "name": "VariableDeclaration",
+                    "src": "994:12:17"
+                  }
+                ],
+                "id": 1889,
+                "name": "ParameterList",
+                "src": "993:14:17"
+              }
+            ],
+            "id": 1890,
+            "name": "FunctionDefinition",
+            "src": "922:86:17"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "isTollBooth",
+              "payable": false,
+              "scope": 1911,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tollBooth",
+                      "scope": 1897,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1891,
+                        "name": "ElementaryTypeName",
+                        "src": "1193:7:17"
+                      }
+                    ],
+                    "id": 1892,
+                    "name": "VariableDeclaration",
+                    "src": "1193:17:17"
+                  }
+                ],
+                "id": 1893,
+                "name": "ParameterList",
+                "src": "1192:19:17"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "isIndeed",
+                      "scope": 1897,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1894,
+                        "name": "ElementaryTypeName",
+                        "src": "1260:4:17"
+                      }
+                    ],
+                    "id": 1895,
+                    "name": "VariableDeclaration",
+                    "src": "1260:13:17"
+                  }
+                ],
+                "id": 1896,
+                "name": "ParameterList",
+                "src": "1259:15:17"
+              }
+            ],
+            "id": 1897,
+            "name": "FunctionDefinition",
+            "src": "1172:103:17"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogTollBoothRemoved"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1903,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1898,
+                        "name": "ElementaryTypeName",
+                        "src": "1523:7:17"
+                      }
+                    ],
+                    "id": 1899,
+                    "name": "VariableDeclaration",
+                    "src": "1523:22:17"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "tollBooth",
+                      "scope": 1903,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1900,
+                        "name": "ElementaryTypeName",
+                        "src": "1555:7:17"
+                      }
+                    ],
+                    "id": 1901,
+                    "name": "VariableDeclaration",
+                    "src": "1555:25:17"
+                  }
+                ],
+                "id": 1902,
+                "name": "ParameterList",
+                "src": "1513:68:17"
+              }
+            ],
+            "id": 1903,
+            "name": "EventDefinition",
+            "src": "1488:94:17"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "removeTollBooth",
+              "payable": false,
+              "scope": 1911,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tollBooth",
+                      "scope": 1910,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1904,
+                        "name": "ElementaryTypeName",
+                        "src": "2165:7:17"
+                      }
+                    ],
+                    "id": 1905,
+                    "name": "VariableDeclaration",
+                    "src": "2165:17:17"
+                  }
+                ],
+                "id": 1906,
+                "name": "ParameterList",
+                "src": "2164:19:17"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1910,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1907,
+                        "name": "ElementaryTypeName",
+                        "src": "2215:4:17"
+                      }
+                    ],
+                    "id": 1908,
+                    "name": "VariableDeclaration",
+                    "src": "2215:12:17"
+                  }
+                ],
+                "id": 1909,
+                "name": "ParameterList",
+                "src": "2214:14:17"
+              }
+            ],
+            "id": 1910,
+            "name": "FunctionDefinition",
+            "src": "2140:89:17"
+          }
+        ],
+        "id": 1911,
+        "name": "ContractDefinition",
+        "src": "26:2415:17"
+      }
+    ],
+    "id": 1912,
+    "name": "SourceUnit",
+    "src": "0:2441:17"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.309Z"
+}

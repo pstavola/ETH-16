@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Tolls Network Frontend</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <script src="./javascripts/app.js"></script>
+</head>
+<body>
+  <h1>Regulator</h1>
+  <h2><select id="addressList"><option value=""></option></select></h2>
+  <h2><button id="copy" onclick="App.copyToClipboard()">Copy</button></h2>
+
+  <br>
+  <h1>Set Vehicle type</h1>
+  <br><label for="vehicleAddress">Vehicle:</label><input type="text" id="vehicleAddress" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+  <br><label for="vehicleType">Type:</label><input type="text" id="vehicleType" placeholder="e.g., 1"></input>
+  <br><br><button id="setVehicle" onclick="App.setVehicle()">Set Vehicle type</button>
+  <br><br>
+  <span id="setVehicleStatus"></span>
+  <br>
+  
+  <br>
+  <h1>Create new Operator</h1>
+  <br><label for="owner">Owner:</label><input type="text" id="owner" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+  <br><label for="deposit">Deposit:</label><input type="text" id="deposit" placeholder="e.g., 10"></input>
+  <br><br><button id="newOperator" onclick="App.newOperator()">Create Operator</button>
+  <br><br>
+  <span id="newOperatorStatus"></span>
+  <br>
+</body>
+</html>

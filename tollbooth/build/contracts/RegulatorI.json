@@ -1,0 +1,1044 @@
+{
+  "contractName": "RegulatorI",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "vehicle",
+          "type": "address"
+        }
+      ],
+      "name": "getVehicleType",
+      "outputs": [
+        {
+          "name": "vehicleType",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "vehicle",
+          "type": "address"
+        },
+        {
+          "name": "vehicleType",
+          "type": "uint256"
+        }
+      ],
+      "name": "setVehicleType",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "isOperator",
+      "outputs": [
+        {
+          "name": "indeed",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "removeOperator",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "name": "deposit",
+          "type": "uint256"
+        }
+      ],
+      "name": "createNewOperator",
+      "outputs": [
+        {
+          "name": "newOperator",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "vehicle",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "vehicleType",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogVehicleTypeSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOperator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "depositWeis",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogTollBoothOperatorCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "LogTollBoothOperatorRemoved",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.13;\n\nimport \"./TollBoothOperatorI.sol\";\n\ncontract RegulatorI {\n\n    /**\n     * uint VehicleType:\n     * 0: not a vehicle, absence of a vehicle\n     * 1 and above: is a vehicle.\n     * For instance:\n     *   1: motorbike\n     *   2: car\n     *   3: lorry\n     */\n\n    /**\n     * Event emitted when a new vehicle has been registered with its type.\n     * @param sender The account that ran the action.\n     * @param vehicle The address of the vehicle that is registered.\n     * @param vehicleType The VehicleType that the vehicle was registered as.\n     */\n    event LogVehicleTypeSet(\n        address indexed sender,\n        address indexed vehicle,\n        uint indexed vehicleType);\n\n    /**\n     * Called by the owner of the regulator to register a new vehicle with its VehicleType.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should roll back if the arguments mean no change of state.\n     *     It should roll back if a 0x vehicle address is passed.\n     * @param vehicle The address of the vehicle being registered. This may be an externally\n     *   owned account or a contract. The regulator does not care.\n     * @param vehicleType The VehicleType of the vehicle being registered.\n     *    passing 0 is equivalent to unregistering the vehicle.\n     * @return Whether the action was successful.\n     * Emits LogVehicleTypeSet\n     */\n    function setVehicleType(address vehicle, uint vehicleType)\n        public\n        returns(bool success);\n\n    /**\n     * @param vehicle The address of the registered vehicle.\n     * @return The VehicleType of the vehicle whose address was passed. 0 means it is not\n     *   a registered vehicle.\n     */\n    function getVehicleType(address vehicle)\n        constant\n        public\n        returns(uint vehicleType);\n\n    /**\n     * Event emitted when a new TollBoothOperator has been created and registered.\n     * @param sender The account that ran the action.\n     * @param newOperator The newly created TollBoothOperator contract.\n     * @param owner The rightful owner of the TollBoothOperator.\n     * @param depositWeis The initial deposit amount set in the TollBoothOperator.\n     */\n    event LogTollBoothOperatorCreated(\n        address indexed sender,\n        address indexed newOperator,\n        address indexed owner,\n        uint depositWeis);\n\n    /**\n     * Called by the owner of the regulator to deploy a new TollBoothOperator onto the network.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should start the TollBoothOperator in the `true` paused state.\n     *     It should roll back if the rightful owner argument is the current owner of the regulator.\n     * @param owner The rightful owner of the newly deployed TollBoothOperator.\n     * @param deposit The initial value of the TollBoothOperator deposit.\n     * @return The address of the newly deployed TollBoothOperator.\n     * Emits LogTollBoothOperatorCreated.\n     */\n    function createNewOperator(\n            address owner,\n            uint deposit)\n        public\n        returns(TollBoothOperatorI newOperator);\n\n    /**\n     * Event emitted when a TollBoothOperator has been removed from the list of approved operators.\n     * @param sender The account that ran the action.\n     * @param operator The removed TollBoothOperator.\n     */\n    event LogTollBoothOperatorRemoved(\n        address indexed sender,\n        address indexed operator);\n\n    /**\n     * Called by the owner of the regulator to remove a previously deployed TollBoothOperator from\n     * the list of approved operators.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should roll back if the operator is unknown.\n     * @param operator The address of the contract to remove.\n     * @return Whether the action was successful.\n     * Emits LogTollBoothOperatorRemoved.\n     */\n    function removeOperator(address operator)\n        public\n        returns(bool success);\n\n    /**\n     * @param operator The address of the TollBoothOperator to test.\n     * @return Whether the TollBoothOperator is indeed approved.\n     */\n    function isOperator(address operator)\n        constant\n        public\n        returns(bool indeed);\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `Regulator` that:\n     *     - is `OwnedI` and `RegulatorI`.\n     *     - has a constructor that takes no parameter.\n     */        \n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RegulatorI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RegulatorI.sol",
+      "exportedSymbols": {
+        "RegulatorI": [
+          1842
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 1777,
+        "name": "PragmaDirective",
+        "src": "0:24:15"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 2013,
+          "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/TollBoothOperatorI.sol",
+          "file": "./TollBoothOperatorI.sol",
+          "scope": 1843,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 1778,
+        "name": "ImportDirective",
+        "src": "26:34:15"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            1842
+          ],
+          "name": "RegulatorI",
+          "scope": 1843
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogVehicleTypeSet"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1786,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1779,
+                        "name": "ElementaryTypeName",
+                        "src": "613:7:15"
+                      }
+                    ],
+                    "id": 1780,
+                    "name": "VariableDeclaration",
+                    "src": "613:22:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "vehicle",
+                      "scope": 1786,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1781,
+                        "name": "ElementaryTypeName",
+                        "src": "645:7:15"
+                      }
+                    ],
+                    "id": 1782,
+                    "name": "VariableDeclaration",
+                    "src": "645:23:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "vehicleType",
+                      "scope": 1786,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1783,
+                        "name": "ElementaryTypeName",
+                        "src": "678:4:15"
+                      }
+                    ],
+                    "id": 1784,
+                    "name": "VariableDeclaration",
+                    "src": "678:24:15"
+                  }
+                ],
+                "id": 1785,
+                "name": "ParameterList",
+                "src": "603:100:15"
+              }
+            ],
+            "id": 1786,
+            "name": "EventDefinition",
+            "src": "580:124:15"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setVehicleType",
+              "payable": false,
+              "scope": 1842,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "vehicle",
+                      "scope": 1795,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1787,
+                        "name": "ElementaryTypeName",
+                        "src": "1440:7:15"
+                      }
+                    ],
+                    "id": 1788,
+                    "name": "VariableDeclaration",
+                    "src": "1440:15:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "vehicleType",
+                      "scope": 1795,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1789,
+                        "name": "ElementaryTypeName",
+                        "src": "1457:4:15"
+                      }
+                    ],
+                    "id": 1790,
+                    "name": "VariableDeclaration",
+                    "src": "1457:16:15"
+                  }
+                ],
+                "id": 1791,
+                "name": "ParameterList",
+                "src": "1439:35:15"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1795,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1792,
+                        "name": "ElementaryTypeName",
+                        "src": "1506:4:15"
+                      }
+                    ],
+                    "id": 1793,
+                    "name": "VariableDeclaration",
+                    "src": "1506:12:15"
+                  }
+                ],
+                "id": 1794,
+                "name": "ParameterList",
+                "src": "1505:14:15"
+              }
+            ],
+            "id": 1795,
+            "name": "FunctionDefinition",
+            "src": "1416:104:15"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "getVehicleType",
+              "payable": false,
+              "scope": 1842,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "vehicle",
+                      "scope": 1802,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1796,
+                        "name": "ElementaryTypeName",
+                        "src": "1748:7:15"
+                      }
+                    ],
+                    "id": 1797,
+                    "name": "VariableDeclaration",
+                    "src": "1748:15:15"
+                  }
+                ],
+                "id": 1798,
+                "name": "ParameterList",
+                "src": "1747:17:15"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "vehicleType",
+                      "scope": 1802,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1799,
+                        "name": "ElementaryTypeName",
+                        "src": "1813:4:15"
+                      }
+                    ],
+                    "id": 1800,
+                    "name": "VariableDeclaration",
+                    "src": "1813:16:15"
+                  }
+                ],
+                "id": 1801,
+                "name": "ParameterList",
+                "src": "1812:18:15"
+              }
+            ],
+            "id": 1802,
+            "name": "FunctionDefinition",
+            "src": "1724:107:15"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogTollBoothOperatorCreated"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1812,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1803,
+                        "name": "ElementaryTypeName",
+                        "src": "2253:7:15"
+                      }
+                    ],
+                    "id": 1804,
+                    "name": "VariableDeclaration",
+                    "src": "2253:22:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "newOperator",
+                      "scope": 1812,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1805,
+                        "name": "ElementaryTypeName",
+                        "src": "2285:7:15"
+                      }
+                    ],
+                    "id": 1806,
+                    "name": "VariableDeclaration",
+                    "src": "2285:27:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "owner",
+                      "scope": 1812,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1807,
+                        "name": "ElementaryTypeName",
+                        "src": "2322:7:15"
+                      }
+                    ],
+                    "id": 1808,
+                    "name": "VariableDeclaration",
+                    "src": "2322:21:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "depositWeis",
+                      "scope": 1812,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1809,
+                        "name": "ElementaryTypeName",
+                        "src": "2353:4:15"
+                      }
+                    ],
+                    "id": 1810,
+                    "name": "VariableDeclaration",
+                    "src": "2353:16:15"
+                  }
+                ],
+                "id": 1811,
+                "name": "ParameterList",
+                "src": "2243:127:15"
+              }
+            ],
+            "id": 1812,
+            "name": "EventDefinition",
+            "src": "2210:161:15"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "createNewOperator",
+              "payable": false,
+              "scope": 1842,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "owner",
+                      "scope": 1821,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1813,
+                        "name": "ElementaryTypeName",
+                        "src": "3050:7:15"
+                      }
+                    ],
+                    "id": 1814,
+                    "name": "VariableDeclaration",
+                    "src": "3050:13:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "deposit",
+                      "scope": 1821,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1815,
+                        "name": "ElementaryTypeName",
+                        "src": "3077:4:15"
+                      }
+                    ],
+                    "id": 1816,
+                    "name": "VariableDeclaration",
+                    "src": "3077:12:15"
+                  }
+                ],
+                "id": 1817,
+                "name": "ParameterList",
+                "src": "3036:54:15"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "newOperator",
+                      "scope": 1821,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "contract TollBoothOperatorI",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "TollBoothOperatorI",
+                          "referencedDeclaration": 2012,
+                          "type": "contract TollBoothOperatorI"
+                        },
+                        "id": 1818,
+                        "name": "UserDefinedTypeName",
+                        "src": "3122:18:15"
+                      }
+                    ],
+                    "id": 1819,
+                    "name": "VariableDeclaration",
+                    "src": "3122:30:15"
+                  }
+                ],
+                "id": 1820,
+                "name": "ParameterList",
+                "src": "3121:32:15"
+              }
+            ],
+            "id": 1821,
+            "name": "FunctionDefinition",
+            "src": "3010:144:15"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogTollBoothOperatorRemoved"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1827,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1822,
+                        "name": "ElementaryTypeName",
+                        "src": "3427:7:15"
+                      }
+                    ],
+                    "id": 1823,
+                    "name": "VariableDeclaration",
+                    "src": "3427:22:15"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "operator",
+                      "scope": 1827,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1824,
+                        "name": "ElementaryTypeName",
+                        "src": "3459:7:15"
+                      }
+                    ],
+                    "id": 1825,
+                    "name": "VariableDeclaration",
+                    "src": "3459:24:15"
+                  }
+                ],
+                "id": 1826,
+                "name": "ParameterList",
+                "src": "3417:67:15"
+              }
+            ],
+            "id": 1827,
+            "name": "EventDefinition",
+            "src": "3384:101:15"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "removeOperator",
+              "payable": false,
+              "scope": 1842,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "operator",
+                      "scope": 1834,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1828,
+                        "name": "ElementaryTypeName",
+                        "src": "3961:7:15"
+                      }
+                    ],
+                    "id": 1829,
+                    "name": "VariableDeclaration",
+                    "src": "3961:16:15"
+                  }
+                ],
+                "id": 1830,
+                "name": "ParameterList",
+                "src": "3960:18:15"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1834,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1831,
+                        "name": "ElementaryTypeName",
+                        "src": "4010:4:15"
+                      }
+                    ],
+                    "id": 1832,
+                    "name": "VariableDeclaration",
+                    "src": "4010:12:15"
+                  }
+                ],
+                "id": 1833,
+                "name": "ParameterList",
+                "src": "4009:14:15"
+              }
+            ],
+            "id": 1834,
+            "name": "FunctionDefinition",
+            "src": "3937:87:15"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "isOperator",
+              "payable": false,
+              "scope": 1842,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "operator",
+                      "scope": 1841,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1835,
+                        "name": "ElementaryTypeName",
+                        "src": "4200:7:15"
+                      }
+                    ],
+                    "id": 1836,
+                    "name": "VariableDeclaration",
+                    "src": "4200:16:15"
+                  }
+                ],
+                "id": 1837,
+                "name": "ParameterList",
+                "src": "4199:18:15"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "indeed",
+                      "scope": 1841,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1838,
+                        "name": "ElementaryTypeName",
+                        "src": "4266:4:15"
+                      }
+                    ],
+                    "id": 1839,
+                    "name": "VariableDeclaration",
+                    "src": "4266:11:15"
+                  }
+                ],
+                "id": 1840,
+                "name": "ParameterList",
+                "src": "4265:13:15"
+              }
+            ],
+            "id": 1841,
+            "name": "FunctionDefinition",
+            "src": "4180:99:15"
+          }
+        ],
+        "id": 1842,
+        "name": "ContractDefinition",
+        "src": "62:4420:15"
+      }
+    ],
+    "id": 1843,
+    "name": "SourceUnit",
+    "src": "0:4482:15"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.309Z"
+}

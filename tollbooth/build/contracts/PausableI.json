@@ -1,0 +1,345 @@
+{
+  "contractName": "PausableI",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newState",
+          "type": "bool"
+        }
+      ],
+      "name": "setPaused",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isPaused",
+      "outputs": [
+        {
+          "name": "isIndeed",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newPausedState",
+          "type": "bool"
+        }
+      ],
+      "name": "LogPausedSet",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.13;\n\ncontract PausableI {\n    /**\n     * Event emitted when a new paused state has been set.\n     * @param sender The account that ran the action.\n     * @param newPausedState The new, and current, paused state of the contract.\n     */\n    event LogPausedSet(address indexed sender, bool indexed newPausedState);\n\n    /**\n     * Sets the new paused state for this contract.\n     *     It should roll back if the caller is not the current owner of this contract.\n     *     It should roll back if the state passed is no different from the current.\n     * @param newState The new desired \"paused\" state of the contract.\n     * @return Whether the action was successful.\n     * Emits LogPausedSet.\n     */\n    function setPaused(bool newState) returns(bool success);\n\n    /**\n     * @return Whether the contract is indeed paused.\n     */\n    function isPaused() constant returns(bool isIndeed);\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `Pausable` that:\n     *     - is a `OwnedI` and a `PausableI`.\n     *     - has a modifier named `whenPaused` that rolls back the transaction if the\n     * contract is in the `false` paused state.\n     *     - has a modifier named `whenNotPaused` that rolls back the transaction if the\n     * contract is in the `true` paused state.\n     *     - has a constructor that takes one `bool` parameter, the initial paused state.\n     */\n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/PausableI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/PausableI.sol",
+      "exportedSymbols": {
+        "PausableI": [
+          1753
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 1734,
+        "name": "PragmaDirective",
+        "src": "0:24:13"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            1753
+          ],
+          "name": "PausableI",
+          "scope": 1754
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogPausedSet"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1740,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1735,
+                        "name": "ElementaryTypeName",
+                        "src": "280:7:13"
+                      }
+                    ],
+                    "id": 1736,
+                    "name": "VariableDeclaration",
+                    "src": "280:22:13"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "newPausedState",
+                      "scope": 1740,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1737,
+                        "name": "ElementaryTypeName",
+                        "src": "304:4:13"
+                      }
+                    ],
+                    "id": 1738,
+                    "name": "VariableDeclaration",
+                    "src": "304:27:13"
+                  }
+                ],
+                "id": 1739,
+                "name": "ParameterList",
+                "src": "279:53:13"
+              }
+            ],
+            "id": 1740,
+            "name": "EventDefinition",
+            "src": "261:72:13"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setPaused",
+              "payable": false,
+              "scope": 1753,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "newState",
+                      "scope": 1747,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1741,
+                        "name": "ElementaryTypeName",
+                        "src": "747:4:13"
+                      }
+                    ],
+                    "id": 1742,
+                    "name": "VariableDeclaration",
+                    "src": "747:13:13"
+                  }
+                ],
+                "id": 1743,
+                "name": "ParameterList",
+                "src": "746:15:13"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1747,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1744,
+                        "name": "ElementaryTypeName",
+                        "src": "770:4:13"
+                      }
+                    ],
+                    "id": 1745,
+                    "name": "VariableDeclaration",
+                    "src": "770:12:13"
+                  }
+                ],
+                "id": 1746,
+                "name": "ParameterList",
+                "src": "769:14:13"
+              }
+            ],
+            "id": 1747,
+            "name": "FunctionDefinition",
+            "src": "728:56:13"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "isPaused",
+              "payable": false,
+              "scope": 1753,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1748,
+                "name": "ParameterList",
+                "src": "877:2:13"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "isIndeed",
+                      "scope": 1752,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1749,
+                        "name": "ElementaryTypeName",
+                        "src": "897:4:13"
+                      }
+                    ],
+                    "id": 1750,
+                    "name": "VariableDeclaration",
+                    "src": "897:13:13"
+                  }
+                ],
+                "id": 1751,
+                "name": "ParameterList",
+                "src": "896:15:13"
+              }
+            ],
+            "id": 1752,
+            "name": "FunctionDefinition",
+            "src": "860:52:13"
+          }
+        ],
+        "id": 1753,
+        "name": "ContractDefinition",
+        "src": "26:1387:13"
+      }
+    ],
+    "id": 1754,
+    "name": "SourceUnit",
+    "src": "0:1413:13"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.304Z"
+}

@@ -1,0 +1,362 @@
+{
+  "contractName": "RegulatedI",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newRegulator",
+          "type": "address"
+        }
+      ],
+      "name": "setRegulator",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getRegulator",
+      "outputs": [
+        {
+          "name": "regulator",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousRegulator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newRegulator",
+          "type": "address"
+        }
+      ],
+      "name": "LogRegulatorSet",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.13;\n\nimport \"./RegulatorI.sol\";\n\ncontract RegulatedI {\n    /**\n     * Event emitted when a new regulator has been set.\n     * @param previousRegulator The previous regulator of the contract.\n     * @param newRegulator The new, and current, regulator of the contract.\n     */\n    event LogRegulatorSet(\n        address indexed previousRegulator,\n        address indexed newRegulator);\n\n    /**\n     * Sets the new regulator for this contract.\n     *     It should roll back if any address other than the current regulator of this contract\n     *       calls this function.\n     *     It should roll back if the new regulator address is 0.\n     *     It should roll back if the new regulator is the same as the current regulator.\n     * @param newRegulator The new desired regulator of the contract.\n     * @return Whether the action was successful.\n     * Emits LogRegulatorSet.\n     */\n    function setRegulator(address newRegulator)\n        public\n        returns(bool success);\n\n    /**\n     * @return The current regulator.\n     */\n    function getRegulator()\n        constant\n        public\n        returns(RegulatorI regulator);\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `Regulated` that:\n     *     - is a `RegulatedI`.\n     *     - has a constructor that takes one `address` parameter, the initial regulator, which cannot be 0.\n     */\n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RegulatedI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RegulatedI.sol",
+      "exportedSymbols": {
+        "RegulatedI": [
+          1775
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 1755,
+        "name": "PragmaDirective",
+        "src": "0:24:14"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 1843,
+          "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RegulatorI.sol",
+          "file": "./RegulatorI.sol",
+          "scope": 1776,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 1756,
+        "name": "ImportDirective",
+        "src": "26:26:14"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            1775
+          ],
+          "name": "RegulatedI",
+          "scope": 1776
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogRegulatorSet"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "previousRegulator",
+                      "scope": 1762,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1757,
+                        "name": "ElementaryTypeName",
+                        "src": "331:7:14"
+                      }
+                    ],
+                    "id": 1758,
+                    "name": "VariableDeclaration",
+                    "src": "331:33:14"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "newRegulator",
+                      "scope": 1762,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1759,
+                        "name": "ElementaryTypeName",
+                        "src": "374:7:14"
+                      }
+                    ],
+                    "id": 1760,
+                    "name": "VariableDeclaration",
+                    "src": "374:28:14"
+                  }
+                ],
+                "id": 1761,
+                "name": "ParameterList",
+                "src": "321:82:14"
+              }
+            ],
+            "id": 1762,
+            "name": "EventDefinition",
+            "src": "300:104:14"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setRegulator",
+              "payable": false,
+              "scope": 1775,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "newRegulator",
+                      "scope": 1769,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1763,
+                        "name": "ElementaryTypeName",
+                        "src": "933:7:14"
+                      }
+                    ],
+                    "id": 1764,
+                    "name": "VariableDeclaration",
+                    "src": "933:20:14"
+                  }
+                ],
+                "id": 1765,
+                "name": "ParameterList",
+                "src": "932:22:14"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1769,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1766,
+                        "name": "ElementaryTypeName",
+                        "src": "986:4:14"
+                      }
+                    ],
+                    "id": 1767,
+                    "name": "VariableDeclaration",
+                    "src": "986:12:14"
+                  }
+                ],
+                "id": 1768,
+                "name": "ParameterList",
+                "src": "985:14:14"
+              }
+            ],
+            "id": 1769,
+            "name": "FunctionDefinition",
+            "src": "911:89:14"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "getRegulator",
+              "payable": false,
+              "scope": 1775,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1770,
+                "name": "ParameterList",
+                "src": "1081:2:14"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "regulator",
+                      "scope": 1774,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "contract RegulatorI",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "RegulatorI",
+                          "referencedDeclaration": 1842,
+                          "type": "contract RegulatorI"
+                        },
+                        "id": 1771,
+                        "name": "UserDefinedTypeName",
+                        "src": "1132:10:14"
+                      }
+                    ],
+                    "id": 1772,
+                    "name": "VariableDeclaration",
+                    "src": "1132:20:14"
+                  }
+                ],
+                "id": 1773,
+                "name": "ParameterList",
+                "src": "1131:22:14"
+              }
+            ],
+            "id": 1774,
+            "name": "FunctionDefinition",
+            "src": "1060:94:14"
+          }
+        ],
+        "id": 1775,
+        "name": "ContractDefinition",
+        "src": "54:1337:14"
+      }
+    ],
+    "id": 1776,
+    "name": "SourceUnit",
+    "src": "0:1391:14"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.304Z"
+}

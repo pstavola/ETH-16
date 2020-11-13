@@ -1,0 +1,526 @@
+{
+  "contractName": "RoutePriceHolderI",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "entryBooth",
+          "type": "address"
+        },
+        {
+          "name": "exitBooth",
+          "type": "address"
+        }
+      ],
+      "name": "getRoutePrice",
+      "outputs": [
+        {
+          "name": "priceWeis",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "entryBooth",
+          "type": "address"
+        },
+        {
+          "name": "exitBooth",
+          "type": "address"
+        },
+        {
+          "name": "priceWeis",
+          "type": "uint256"
+        }
+      ],
+      "name": "setRoutePrice",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "entryBooth",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "exitBooth",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "priceWeis",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogRoutePriceSet",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.13;\n\ncontract RoutePriceHolderI {\n\n    /**\n     * Event emitted when a new price has been set on a route.\n     * @param sender The account that ran the action.\n     * @param entryBooth The address of the entry booth of the route set.\n     * @param exitBooth The address of the exit booth of the route set.\n     * @param priceWeis The price in weis of the new route.\n     */\n    event LogRoutePriceSet(\n        address indexed sender,\n        address indexed entryBooth,\n        address indexed exitBooth,\n        uint priceWeis);\n\n    /**\n     * Called by the owner of the RoutePriceHolder.\n     *     It can be used to update the price of a route, including to zero.\n     *     It should roll back if the caller is not the owner of the contract.\n     *     It should roll back if one of the booths is not a registered booth.\n     *     It should roll back if entry and exit booths are the same.\n     *     It should roll back if either booth is a 0x address.\n     *     It should roll back if there is no change in price.\n     * @param entryBooth The address of the entry booth of the route set.\n     * @param exitBooth The address of the exit booth of the route set.\n     * @param priceWeis The price in weis of the new route.\n     * @return Whether the action was successful.\n     * Emits LogPriceSet.\n     */\n    function setRoutePrice(\n            address entryBooth,\n            address exitBooth,\n            uint priceWeis)\n        public\n        returns(bool success);\n\n    /**\n     * @param entryBooth The address of the entry booth of the route.\n     * @param exitBooth The address of the exit booth of the route.\n     * @return priceWeis The price in weis of the route.\n     *     If the route is not known or if any address is not a booth it should return 0.\n     *     If the route is invalid, it should return 0.\n     */\n    function getRoutePrice(\n            address entryBooth,\n            address exitBooth)\n        constant\n        public\n        returns(uint priceWeis);\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `RoutePriceHolder` that:\n     *     - is `OwnedI`, `TollBoothHolderI`, and `RoutePriceHolderI`.\n     *     - has a constructor that takes no parameter.\n     */\n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RoutePriceHolderI.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RoutePriceHolderI.sol",
+      "exportedSymbols": {
+        "RoutePriceHolderI": [
+          1875
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 1844,
+        "name": "PragmaDirective",
+        "src": "0:24:16"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            1875
+          ],
+          "name": "RoutePriceHolderI",
+          "scope": 1876
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "LogRoutePriceSet"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "sender",
+                      "scope": 1854,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1845,
+                        "name": "ElementaryTypeName",
+                        "src": "431:7:16"
+                      }
+                    ],
+                    "id": 1846,
+                    "name": "VariableDeclaration",
+                    "src": "431:22:16"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "entryBooth",
+                      "scope": 1854,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1847,
+                        "name": "ElementaryTypeName",
+                        "src": "463:7:16"
+                      }
+                    ],
+                    "id": 1848,
+                    "name": "VariableDeclaration",
+                    "src": "463:26:16"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "exitBooth",
+                      "scope": 1854,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1849,
+                        "name": "ElementaryTypeName",
+                        "src": "499:7:16"
+                      }
+                    ],
+                    "id": 1850,
+                    "name": "VariableDeclaration",
+                    "src": "499:25:16"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "priceWeis",
+                      "scope": 1854,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1851,
+                        "name": "ElementaryTypeName",
+                        "src": "534:4:16"
+                      }
+                    ],
+                    "id": 1852,
+                    "name": "VariableDeclaration",
+                    "src": "534:14:16"
+                  }
+                ],
+                "id": 1853,
+                "name": "ParameterList",
+                "src": "421:128:16"
+              }
+            ],
+            "id": 1854,
+            "name": "EventDefinition",
+            "src": "399:151:16"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": false,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setRoutePrice",
+              "payable": false,
+              "scope": 1875,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "entryBooth",
+                      "scope": 1865,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1855,
+                        "name": "ElementaryTypeName",
+                        "src": "1374:7:16"
+                      }
+                    ],
+                    "id": 1856,
+                    "name": "VariableDeclaration",
+                    "src": "1374:18:16"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "exitBooth",
+                      "scope": 1865,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1857,
+                        "name": "ElementaryTypeName",
+                        "src": "1406:7:16"
+                      }
+                    ],
+                    "id": 1858,
+                    "name": "VariableDeclaration",
+                    "src": "1406:17:16"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "priceWeis",
+                      "scope": 1865,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1859,
+                        "name": "ElementaryTypeName",
+                        "src": "1437:4:16"
+                      }
+                    ],
+                    "id": 1860,
+                    "name": "VariableDeclaration",
+                    "src": "1437:14:16"
+                  }
+                ],
+                "id": 1861,
+                "name": "ParameterList",
+                "src": "1360:92:16"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 1865,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 1862,
+                        "name": "ElementaryTypeName",
+                        "src": "1484:4:16"
+                      }
+                    ],
+                    "id": 1863,
+                    "name": "VariableDeclaration",
+                    "src": "1484:12:16"
+                  }
+                ],
+                "id": 1864,
+                "name": "ParameterList",
+                "src": "1483:14:16"
+              }
+            ],
+            "id": 1865,
+            "name": "FunctionDefinition",
+            "src": "1338:160:16"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "constant": true,
+              "implemented": false,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "getRoutePrice",
+              "payable": false,
+              "scope": 1875,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "entryBooth",
+                      "scope": 1874,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1866,
+                        "name": "ElementaryTypeName",
+                        "src": "1897:7:16"
+                      }
+                    ],
+                    "id": 1867,
+                    "name": "VariableDeclaration",
+                    "src": "1897:18:16"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "exitBooth",
+                      "scope": 1874,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 1868,
+                        "name": "ElementaryTypeName",
+                        "src": "1929:7:16"
+                      }
+                    ],
+                    "id": 1869,
+                    "name": "VariableDeclaration",
+                    "src": "1929:17:16"
+                  }
+                ],
+                "id": 1870,
+                "name": "ParameterList",
+                "src": "1883:64:16"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "priceWeis",
+                      "scope": 1874,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 1871,
+                        "name": "ElementaryTypeName",
+                        "src": "1996:4:16"
+                      }
+                    ],
+                    "id": 1872,
+                    "name": "VariableDeclaration",
+                    "src": "1996:14:16"
+                  }
+                ],
+                "id": 1873,
+                "name": "ParameterList",
+                "src": "1995:16:16"
+              }
+            ],
+            "id": 1874,
+            "name": "FunctionDefinition",
+            "src": "1861:151:16"
+          }
+        ],
+        "id": 1875,
+        "name": "ContractDefinition",
+        "src": "26:2216:16"
+      }
+    ],
+    "id": 1876,
+    "name": "SourceUnit",
+    "src": "0:2242:16"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.309Z"
+}

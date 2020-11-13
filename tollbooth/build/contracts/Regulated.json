@@ -1,0 +1,1233 @@
+{
+  "contractName": "Regulated",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newRegulator",
+          "type": "address"
+        }
+      ],
+      "name": "setRegulator",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getRegulator",
+      "outputs": [
+        {
+          "name": "regulator",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_regulator",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousRegulator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newRegulator",
+          "type": "address"
+        }
+      ],
+      "name": "LogRegulatorSet",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x6060604052341561000f57600080fd5b6040516020806103bc83398101604052808051906020019091905050600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561006757600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050610305806100b76000396000f30060606040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063cde0a4f814610051578063f7e317f4146100a2575b600080fd5b341561005c57600080fd5b610088600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919050506100f7565b604051808215151515815260200191505060405180910390f35b34156100ad57600080fd5b6100b56102b0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561015457600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff161415151561019057600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16141515156101ec57600080fd5b8173ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167fa32c4b1f26f0d877f643f7fb9db131f9cebf04d120fe5ada74c0bdfc808dab8360405160405180910390a3816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060019050919050565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600a165627a7a7230582053f1f18a3b0ff95c3bf2c65deeb916f0117b7a5790c116ded51caa439e6217780029",
+  "deployedBytecode": "0x60606040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063cde0a4f814610051578063f7e317f4146100a2575b600080fd5b341561005c57600080fd5b610088600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919050506100f7565b604051808215151515815260200191505060405180910390f35b34156100ad57600080fd5b6100b56102b0565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561015457600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff161415151561019057600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16141515156101ec57600080fd5b8173ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167fa32c4b1f26f0d877f643f7fb9db131f9cebf04d120fe5ada74c0bdfc808dab8360405160405180910390a3816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060019050919050565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050905600a165627a7a7230582053f1f18a3b0ff95c3bf2c65deeb916f0117b7a5790c116ded51caa439e6217780029",
+  "sourceMap": "65:1502:5:-;;;139:124;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;218:1;196:24;;:10;:24;;;;188:33;;;;;;;;246:10;232:11;;:24;;;;;;;;;;;;;;;;;;139:124;65:1502;;;;;;",
+  "deployedSourceMap": "65:1502:5:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;770:350;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1180:150;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;770:350;845:12;895:11;;;;;;;;;;;881:25;;:10;:25;;;873:34;;;;;;;;949:1;925:26;;:12;:26;;;;917:35;;;;;;;;986:11;;;;;;;;;;;970:27;;:12;:27;;;;962:36;;;;;;;;1038:12;1009:42;;1025:11;;;;;;;;;;;1009:42;;;;;;;;;;;;1076:12;1062:11;;:26;;;;;;;;;;;;;;;;;;1109:4;1099:14;;770:350;;;:::o;1180:150::-;1252:20;1311:11;;;;;;;;;;;1288:35;;1180:150;:::o",
+  "source": "pragma solidity ^0.4.13;\n\nimport \"./interfaces/RegulatedI.sol\";\n\ncontract Regulated is RegulatedI {\n    address internal myRegulator;\n\n    function Regulated(address _regulator) {\n        require(_regulator != address(0));\n\n        myRegulator = _regulator;\n    }\n\n    /**\n     * Sets the new regulator for this contract.\n     *     It should roll back if any address other than the current regulator of this contract\n     *       calls this function.\n     *     It should roll back if the new regulator address is 0.\n     *     It should roll back if the new regulator is the same as the current regulator.\n     * @param newRegulator The new desired regulator of the contract.\n     * @return Whether the action was successful.\n     * Emits LogRegulatorSet.\n     */\n    function setRegulator(address newRegulator)\n        public\n        returns(bool success)\n    {\n        require(msg.sender == myRegulator);\n        require(newRegulator != address(0));\n        require(newRegulator != myRegulator);\n\n        LogRegulatorSet(myRegulator, newRegulator);\n\n        myRegulator = newRegulator;\n\n        success = true;\n    }\n\n    /**\n     * @return The current regulator.\n     */\n    function getRegulator()\n        constant\n        public\n        returns(RegulatorI regulator)\n    {\n        regulator = RegulatorI(myRegulator);\n    }\n\n    /*\n     * You need to create:\n     *\n     * - a contract named `Regulated` that:\n     *     - is a `RegulatedI`.\n     *     - has a constructor that takes one `address` parameter, the initial regulator, which cannot be 0.\n     */\n}",
+  "sourcePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/Regulated.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/Regulated.sol",
+      "exportedSymbols": {
+        "Regulated": [
+          432
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".13"
+          ]
+        },
+        "id": 354,
+        "name": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 1776,
+          "absolutePath": "/Users/halovast/DAPPS/contractFactory/exam-step-2/contracts/interfaces/RegulatedI.sol",
+          "file": "./interfaces/RegulatedI.sol",
+          "scope": 433,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 355,
+        "name": "ImportDirective",
+        "src": "26:37:5"
+      },
+      {
+        "attributes": {
+          "contractDependencies": [
+            1775
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            432,
+            1775
+          ],
+          "name": "Regulated",
+          "scope": 433
+        },
+        "children": [
+          {
+            "attributes": {
+              "arguments": [
+                null
+              ]
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "RegulatedI",
+                  "referencedDeclaration": 1775,
+                  "type": "contract RegulatedI"
+                },
+                "id": 356,
+                "name": "UserDefinedTypeName",
+                "src": "87:10:5"
+              }
+            ],
+            "id": 357,
+            "name": "InheritanceSpecifier",
+            "src": "87:10:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "myRegulator",
+              "scope": 432,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "address",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "address",
+                  "type": "address"
+                },
+                "id": 358,
+                "name": "ElementaryTypeName",
+                "src": "104:7:5"
+              }
+            ],
+            "id": 359,
+            "name": "VariableDeclaration",
+            "src": "104:28:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": true,
+              "modifiers": [
+                null
+              ],
+              "name": "Regulated",
+              "payable": false,
+              "scope": 432,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_regulator",
+                      "scope": 377,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 360,
+                        "name": "ElementaryTypeName",
+                        "src": "158:7:5"
+                      }
+                    ],
+                    "id": 361,
+                    "name": "VariableDeclaration",
+                    "src": "158:18:5"
+                  }
+                ],
+                "id": 362,
+                "name": "ParameterList",
+                "src": "157:20:5"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 363,
+                "name": "ParameterList",
+                "src": "178:0:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 2084,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 364,
+                            "name": "Identifier",
+                            "src": "188:7:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "!=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 361,
+                                  "type": "address",
+                                  "value": "_regulator"
+                                },
+                                "id": 365,
+                                "name": "Identifier",
+                                "src": "196:10:5"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "type": "address",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_rational_0_by_1",
+                                          "typeString": "int_const 0"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)",
+                                      "value": "address"
+                                    },
+                                    "id": 366,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "210:7:5"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "30",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 0",
+                                      "value": "0"
+                                    },
+                                    "id": 367,
+                                    "name": "Literal",
+                                    "src": "218:1:5"
+                                  }
+                                ],
+                                "id": 368,
+                                "name": "FunctionCall",
+                                "src": "210:10:5"
+                              }
+                            ],
+                            "id": 369,
+                            "name": "BinaryOperation",
+                            "src": "196:24:5"
+                          }
+                        ],
+                        "id": 370,
+                        "name": "FunctionCall",
+                        "src": "188:33:5"
+                      }
+                    ],
+                    "id": 371,
+                    "name": "ExpressionStatement",
+                    "src": "188:33:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "address"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 359,
+                              "type": "address",
+                              "value": "myRegulator"
+                            },
+                            "id": 372,
+                            "name": "Identifier",
+                            "src": "232:11:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 361,
+                              "type": "address",
+                              "value": "_regulator"
+                            },
+                            "id": 373,
+                            "name": "Identifier",
+                            "src": "246:10:5"
+                          }
+                        ],
+                        "id": 374,
+                        "name": "Assignment",
+                        "src": "232:24:5"
+                      }
+                    ],
+                    "id": 375,
+                    "name": "ExpressionStatement",
+                    "src": "232:24:5"
+                  }
+                ],
+                "id": 376,
+                "name": "Block",
+                "src": "178:85:5"
+              }
+            ],
+            "id": 377,
+            "name": "FunctionDefinition",
+            "src": "139:124:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "setRegulator",
+              "payable": false,
+              "scope": 432,
+              "stateMutability": "nonpayable",
+              "superFunction": 1769,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "newRegulator",
+                      "scope": 419,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 378,
+                        "name": "ElementaryTypeName",
+                        "src": "792:7:5"
+                      }
+                    ],
+                    "id": 379,
+                    "name": "VariableDeclaration",
+                    "src": "792:20:5"
+                  }
+                ],
+                "id": 380,
+                "name": "ParameterList",
+                "src": "791:22:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "success",
+                      "scope": 419,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 381,
+                        "name": "ElementaryTypeName",
+                        "src": "845:4:5"
+                      }
+                    ],
+                    "id": 382,
+                    "name": "VariableDeclaration",
+                    "src": "845:12:5"
+                  }
+                ],
+                "id": 383,
+                "name": "ParameterList",
+                "src": "844:14:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 2084,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 384,
+                            "name": "Identifier",
+                            "src": "873:7:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "==",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "sender",
+                                  "referencedDeclaration": null,
+                                  "type": "address"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 2081,
+                                      "type": "msg",
+                                      "value": "msg"
+                                    },
+                                    "id": 385,
+                                    "name": "Identifier",
+                                    "src": "881:3:5"
+                                  }
+                                ],
+                                "id": 386,
+                                "name": "MemberAccess",
+                                "src": "881:10:5"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 359,
+                                  "type": "address",
+                                  "value": "myRegulator"
+                                },
+                                "id": 387,
+                                "name": "Identifier",
+                                "src": "895:11:5"
+                              }
+                            ],
+                            "id": 388,
+                            "name": "BinaryOperation",
+                            "src": "881:25:5"
+                          }
+                        ],
+                        "id": 389,
+                        "name": "FunctionCall",
+                        "src": "873:34:5"
+                      }
+                    ],
+                    "id": 390,
+                    "name": "ExpressionStatement",
+                    "src": "873:34:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 2084,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 391,
+                            "name": "Identifier",
+                            "src": "917:7:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "!=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 379,
+                                  "type": "address",
+                                  "value": "newRegulator"
+                                },
+                                "id": 392,
+                                "name": "Identifier",
+                                "src": "925:12:5"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "type": "address",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_rational_0_by_1",
+                                          "typeString": "int_const 0"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)",
+                                      "value": "address"
+                                    },
+                                    "id": 393,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "941:7:5"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "30",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 0",
+                                      "value": "0"
+                                    },
+                                    "id": 394,
+                                    "name": "Literal",
+                                    "src": "949:1:5"
+                                  }
+                                ],
+                                "id": 395,
+                                "name": "FunctionCall",
+                                "src": "941:10:5"
+                              }
+                            ],
+                            "id": 396,
+                            "name": "BinaryOperation",
+                            "src": "925:26:5"
+                          }
+                        ],
+                        "id": 397,
+                        "name": "FunctionCall",
+                        "src": "917:35:5"
+                      }
+                    ],
+                    "id": 398,
+                    "name": "ExpressionStatement",
+                    "src": "917:35:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 2084,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 399,
+                            "name": "Identifier",
+                            "src": "962:7:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "!=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 379,
+                                  "type": "address",
+                                  "value": "newRegulator"
+                                },
+                                "id": 400,
+                                "name": "Identifier",
+                                "src": "970:12:5"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 359,
+                                  "type": "address",
+                                  "value": "myRegulator"
+                                },
+                                "id": 401,
+                                "name": "Identifier",
+                                "src": "986:11:5"
+                              }
+                            ],
+                            "id": 402,
+                            "name": "BinaryOperation",
+                            "src": "970:27:5"
+                          }
+                        ],
+                        "id": 403,
+                        "name": "FunctionCall",
+                        "src": "962:36:5"
+                      }
+                    ],
+                    "id": 404,
+                    "name": "ExpressionStatement",
+                    "src": "962:36:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                },
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 1762,
+                              "type": "function (address,address)",
+                              "value": "LogRegulatorSet"
+                            },
+                            "id": 405,
+                            "name": "Identifier",
+                            "src": "1009:15:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 359,
+                              "type": "address",
+                              "value": "myRegulator"
+                            },
+                            "id": 406,
+                            "name": "Identifier",
+                            "src": "1025:11:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 379,
+                              "type": "address",
+                              "value": "newRegulator"
+                            },
+                            "id": 407,
+                            "name": "Identifier",
+                            "src": "1038:12:5"
+                          }
+                        ],
+                        "id": 408,
+                        "name": "FunctionCall",
+                        "src": "1009:42:5"
+                      }
+                    ],
+                    "id": 409,
+                    "name": "ExpressionStatement",
+                    "src": "1009:42:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "address"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 359,
+                              "type": "address",
+                              "value": "myRegulator"
+                            },
+                            "id": 410,
+                            "name": "Identifier",
+                            "src": "1062:11:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 379,
+                              "type": "address",
+                              "value": "newRegulator"
+                            },
+                            "id": 411,
+                            "name": "Identifier",
+                            "src": "1076:12:5"
+                          }
+                        ],
+                        "id": 412,
+                        "name": "Assignment",
+                        "src": "1062:26:5"
+                      }
+                    ],
+                    "id": 413,
+                    "name": "ExpressionStatement",
+                    "src": "1062:26:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 382,
+                              "type": "bool",
+                              "value": "success"
+                            },
+                            "id": 414,
+                            "name": "Identifier",
+                            "src": "1099:7:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "74727565",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "bool",
+                              "type": "bool",
+                              "value": "true"
+                            },
+                            "id": 415,
+                            "name": "Literal",
+                            "src": "1109:4:5"
+                          }
+                        ],
+                        "id": 416,
+                        "name": "Assignment",
+                        "src": "1099:14:5"
+                      }
+                    ],
+                    "id": 417,
+                    "name": "ExpressionStatement",
+                    "src": "1099:14:5"
+                  }
+                ],
+                "id": 418,
+                "name": "Block",
+                "src": "863:257:5"
+              }
+            ],
+            "id": 419,
+            "name": "FunctionDefinition",
+            "src": "770:350:5"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "getRegulator",
+              "payable": false,
+              "scope": 432,
+              "stateMutability": "view",
+              "superFunction": 1774,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 420,
+                "name": "ParameterList",
+                "src": "1201:2:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "regulator",
+                      "scope": 431,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "contract RegulatorI",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "RegulatorI",
+                          "referencedDeclaration": 1842,
+                          "type": "contract RegulatorI"
+                        },
+                        "id": 421,
+                        "name": "UserDefinedTypeName",
+                        "src": "1252:10:5"
+                      }
+                    ],
+                    "id": 422,
+                    "name": "VariableDeclaration",
+                    "src": "1252:20:5"
+                  }
+                ],
+                "id": 423,
+                "name": "ParameterList",
+                "src": "1251:22:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "contract RegulatorI"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 422,
+                              "type": "contract RegulatorI",
+                              "value": "regulator"
+                            },
+                            "id": 424,
+                            "name": "Identifier",
+                            "src": "1288:9:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "contract RegulatorI",
+                              "type_conversion": true
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    }
+                                  ],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 1842,
+                                  "type": "type(contract RegulatorI)",
+                                  "value": "RegulatorI"
+                                },
+                                "id": 425,
+                                "name": "Identifier",
+                                "src": "1300:10:5"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 359,
+                                  "type": "address",
+                                  "value": "myRegulator"
+                                },
+                                "id": 426,
+                                "name": "Identifier",
+                                "src": "1311:11:5"
+                              }
+                            ],
+                            "id": 427,
+                            "name": "FunctionCall",
+                            "src": "1300:23:5"
+                          }
+                        ],
+                        "id": 428,
+                        "name": "Assignment",
+                        "src": "1288:35:5"
+                      }
+                    ],
+                    "id": 429,
+                    "name": "ExpressionStatement",
+                    "src": "1288:35:5"
+                  }
+                ],
+                "id": 430,
+                "name": "Block",
+                "src": "1278:52:5"
+              }
+            ],
+            "id": 431,
+            "name": "FunctionDefinition",
+            "src": "1180:150:5"
+          }
+        ],
+        "id": 432,
+        "name": "ContractDefinition",
+        "src": "65:1502:5"
+      }
+    ],
+    "id": 433,
+    "name": "SourceUnit",
+    "src": "0:1567:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2018-02-28T22:58:15.300Z"
+}
